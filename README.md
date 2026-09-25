@@ -1,5 +1,20 @@
 # Crossroads Game (iOS HW1)
 
+## Layout
+```
+                 [ Factory ]
+                   (shovel)
+                      |
+                      N
+                      |
+[ Sea ] ---W--- [ Crossroads ] ---E--- [ Wasteland ]
+ (LOSE)               |                      |
+                      S                      S
+                      |                      |
+                   [ Farm ]           [ Goldfields ]
+                   (shovel)              dig = WIN
+```
+                   
 ## Explanations
 
 **What locations/rooms does your game have?**
