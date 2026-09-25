@@ -1,4 +1,4 @@
-# Crossroads Game
+# Crossroads Game (iOS HW1)
 
 ## Explanations
 
@@ -13,13 +13,13 @@
 
 **What items does your game have?**
 
-1. Shovel (one in the Factory and one on the Farm). You need it to dig for gold in the Goldfields.
+- Shovel (one in the Factory and one on the Farm). You need it to dig for gold in the Goldfields.
 
 **Explain how your code is designed. In particular, describe how you used structs or enums, as well as protocols.**
 
-The `Direction` enum represents the four directions. Its `String` raw values let the player's typed command be converted directly into a direction. The `Item` struct stores an item's name, description, and whether it can dig. The `Location` struct stores a room's name, description, an optional item, and a dictionary of exits that maps each `Direction` to the name of the neighboring location.
+- The `Direction` enum represents the four directions. Its `String` raw values let the player's typed command be converted directly into a direction. The `Item` struct stores an item's name, description, and whether it can dig. The `Location` struct stores a room's name, description, an optional item, and a dictionary of exits that maps each `Direction` to the name of the neighboring location.
 
-The game struct stores all state: a dictionary of every location keyed by name, the player's current location, and an inventory array. Both `Item` and `Location` conform to the `Describable` protocol, which requires a `name` and a `description`. The `describe(_:context:)` function takes any `Describable`, and the `look` command uses it to show both the current room and any item in it.
+- The game struct stores all state: a dictionary of every location keyed by name, the player's current location, and an inventory array. Both `Item` and `Location` conform to the `Describable` protocol, which requires a `name` and a `description`. The `describe(_:context:)` function takes any `Describable`, and the `look` command uses it to show both the current room and any item in it.
 
 **How do you use optionals in your program?**
 
