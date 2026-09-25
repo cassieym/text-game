@@ -1,7 +1,5 @@
 # Crossroads Game
 
-*For instructions, consult the HW1 Assignment on the [CIS 1951 website](https://www.seas.upenn.edu/~cis1951/26sp/assignments/).*
-
 ## Explanations
 
 **What locations/rooms does your game have?**
