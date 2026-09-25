@@ -13,7 +13,6 @@ protocol Describable {
 struct Item: Describable {
     let name: String
     let description : String
-    let canDig: Bool
 }
 
 struct Location: Describable {
@@ -47,13 +46,13 @@ struct YourGame: AdventureGame {
         "Factory": Location(
             name: "Factory",
             description: "A noisy factory full of tired workers. Tools hang on the wall.",
-            item: Item(name: "shovel", description: "A worn wooden shovel.", canDig: true),
+            item: Item(name: "shovel", description: "A worn wooden shovel."),
             exits: [.south: "Crossroads"]
            ),
         "Farm": Location(
             name: "Farm",
             description: "Green fields and a small farmhouse. A farmer waves at you.",
-            item: Item(name: "shovel", description: "A worn wooden shovel.", canDig: true),
+            item: Item(name: "shovel", description: "A worn wooden shovel."),
             exits: [.north: "Crossroads"]
            ),
         "Wasteland": Location(
@@ -84,7 +83,6 @@ struct YourGame: AdventureGame {
     ///
     /// - Parameter context: The object you use to write output and end the game.
     mutating func start(context: AdventureGameContext) {
-        // TODO: Remove this and implement logic to start your game!
         context.write("Welcome to Crossroads Game!")
         if let here = locations[currentLocation] {
             context.write(here.description)
@@ -127,14 +125,70 @@ struct YourGame: AdventureGame {
                 if let here = locations[currentLocation],
                    let nextName = here.exits[direction] {
                     currentLocation = nextName
-                    context.write("You moved \(direction.rawValue)")
+                    context.write("You moved \(direction.rawValue)...")
                     if let newRoom = locations[currentLocation] {
                         context.write(newRoom.description)
+                        
+                        if newRoom.name == "Sea" {
+                            context.write("You don't have a boat and can't swim...")
+                            context.write("Drowning...")
+                            context.write("🥀 Game Over 🥀")
+                            context.endGame()
+                        }
                     }
+                    
+    
                 } else {
                     context.write("You can't go that way.")
                 }
             
+            case "look":
+                // describe location
+                if let here = locations[currentLocation] {
+                    describe(here, context: context)
+                    
+                    // describe item
+                    if let item = here.item {
+                        context.write("Oh, look there's an item.")
+                        describe(item, context: context)
+                    }
+                }
+            
+            case "dig":
+                if currentLocation == "Goldfields" {
+                    if inventory.contains(where: { $0.name == "shovel" }) {
+                        context.write("Digging...")
+                        context.write("Your shovel hit something hard.")
+                        context.write("You found gold!")
+                        context.write("✨ Congrats! You've won! ✨")
+                        context.endGame()
+                    } else {
+                        context.write("You start digging with your bare hands")
+                        context.write("The ground is too hard to dig through...")
+                        context.write("Try acquiring some tools to help you out.")
+                    }
+                } else {
+                    context.write("Digging...")
+                    context.write("There's nothing here.")
+                    context.write("Try somewhere else.")
+                }
+            
+            case "pickup":
+                if let item = locations[currentLocation]?.item {
+                    inventory.append(item)
+                    locations[currentLocation]?.item = nil
+                    context.write("You picked up the \(item.name). It is now in your inventory.")
+                } else {
+                    context.write("There is no item to pick up.")
+                }
+            
+            case "inventory":
+                if inventory.isEmpty {
+                    context.write("Your inventory is empty. Womp womp.")
+                } else {
+                    context.write(inventory.map(\.name).joined(separator: ", "))
+                }
+
             default:
                 context.write("Invalid command.")
         }
@@ -143,8 +197,20 @@ struct YourGame: AdventureGame {
     
     func helpCommand(context: AdventureGameContext) {
         context.write("Available commands:")
+        context.write("- help: show this list of available commands")
         context.write("- north, south, east, west: Move between locations")
-        context.write("- help: Show this list of available commands")
+        context.write("- inventory: list the tools in your inventory")
+        context.write("- look: describe your current location and any item in it")
+        context.write("- dig: dig at your current location")
+        context.write("- pickup: pickup current location's tool")
+
+        
+    }
+    
+    // Purpose: it shows the name and description of a room or an item on screen.
+    // Outputs: two lines, the name and then the description.
+    func describe(_ thing: Describable, context: AdventureGameContext) {
+        context.write(thing.description)
     }
 }
 
