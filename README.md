@@ -1,6 +1,6 @@
 # Crossroads Game (iOS HW1)
 
-## Layout
+## Map
 ```
                  [ Factory ]
                    (shovel)
